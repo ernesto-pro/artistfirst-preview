@@ -53,7 +53,6 @@
 	--af-gutter: clamp(18px, 3.2vw, 54px);
 	--af-header: 80px;
 	--af-section-y: clamp(56px, 10vw, 120px);
-	--af-anchor: calc(var(--af-header) + 18px);
 }
 
 /* Superfici scure: l'accento si inverte per restare leggibile. */
@@ -393,6 +392,7 @@ input, select, textarea {
 .af-link-arrow {
 	display: inline-flex;
 	align-items: center;
+	min-height: 24px;
 	gap: 9px;
 	font-size: 11px;
 	font-weight: 640;
@@ -2311,16 +2311,6 @@ input, select, textarea {
 
 .af-section {
 	padding: var(--af-section-y) 0;
-}
-
-/* Ancore e skip link non finiscono sotto header/ticket bar. */
-#af-main,
-.af-section,
-.af-manifesto,
-.af-igsec,
-.af-sendmusic,
-.af-shopbanner {
-	scroll-margin-top: var(--af-anchor);
 }
 
 .af-section__head {
