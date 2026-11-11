@@ -52,12 +52,15 @@
 	var onScroll = function () {
 		if (header) header.classList.toggle('is-scrolled', window.scrollY > 8);
 		if (!tixbar) return;
-		var threshold = Math.min(window.innerHeight * 0.55, 520);
+		var threshold = Math.min(window.innerHeight * 0.72, 620);
 		var show = window.scrollY > threshold && !body.classList.contains('af-menu-open');
 		if (show === tixbar.classList.contains('is-visible')) return;
 		tixbar.classList.toggle('is-visible', show);
 		tixbar.setAttribute('aria-hidden', show ? 'false' : 'true');
 		tixbar.inert = !show;
+		// Una sola barra alla volta: quando entra la barra biglietti l'header
+		// scivola via, liberando spazio per i contenuti.
+		if (header) header.classList.toggle('is-hidden', show);
 	};
 	window.addEventListener('scroll', onScroll, { passive: true });
 	window.addEventListener('resize', onScroll);
@@ -162,7 +165,7 @@
 			window.setTimeout(function () {
 				cookieBar.hidden = false;
 				body.classList.add('af-cookie-open');
-			}, 1200);
+			}, 900);
 		}
 		qsa('[data-af-cookie-accept]', cookieBar).forEach(function (button) {
 			button.addEventListener('click', function () { setCookie('all'); });
