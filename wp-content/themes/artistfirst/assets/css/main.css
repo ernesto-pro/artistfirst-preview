@@ -1129,12 +1129,19 @@ input, select, textarea {
 .af-stage__poster {
 	position: absolute;
 	inset: -6%;
-	background-size: cover;
-	background-position: center 28%;
+	overflow: hidden;
 	opacity: 0.42;
 	filter: blur(30px) saturate(1.05) brightness(0.52);
 	transform: scale(1.08);
-	transition: opacity 1.2s var(--af-ease), background-image 0.9s;
+	transition: opacity 1.2s var(--af-ease);
+}
+
+.af-stage__poster img {
+	display: block;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	object-position: center 28%;
 }
 
 .af-stage__poster::after {
