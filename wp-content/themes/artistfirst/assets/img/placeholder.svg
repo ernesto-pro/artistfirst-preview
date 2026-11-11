@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 1125" width="900" height="1125" role="img" aria-label="Artist First">
+	<rect width="900" height="1125" fill="#e9e4d9"/>
+	<g fill="#0b0b0c" font-family="Helvetica, Arial, sans-serif" text-anchor="middle">
+		<text x="450" y="505" font-size="150" font-weight="700" letter-spacing="-8">ARTIST</text>
+		<text x="450" y="650" font-size="150" font-weight="700" letter-spacing="-8">FIRST</text>
+	</g>
+	<text x="450" y="738" fill="#0b0b0c" font-family="Georgia, serif" font-style="italic" font-size="62" text-anchor="middle">music first</text>
+	<text x="450" y="880" fill="rgba(11,11,12,.42)" font-family="Helvetica, Arial, sans-serif" font-size="20" letter-spacing="8" text-anchor="middle">A1 ENTERTAINMENT</text>
+</svg>

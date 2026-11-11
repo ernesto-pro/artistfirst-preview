@@ -1,0 +1,137 @@
+/* =========================================================================
+   Artist First — stili editor blocchi
+   ========================================================================= */
+
+.editor-styles-wrapper {
+	--af-paper: #f3f0e9;
+	--af-ink: #0b0b0c;
+	--af-accent: #0b0b0c;
+	--af-accent-rgb: 11, 11, 12;
+	--af-on-accent: #f3f0e9;
+	--af-muted: #757168;
+	--af-line: rgba(11, 11, 12, 0.14);
+	font-family: 'Inter Tight', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+	color: var(--af-ink);
+	background: var(--af-paper);
+}
+
+.editor-styles-wrapper .wp-block {
+	max-width: 900px;
+}
+
+.editor-styles-wrapper .wp-block[data-align='full'] {
+	max-width: none;
+}
+
+.editor-styles-wrapper h1,
+.editor-styles-wrapper h2,
+.editor-styles-wrapper h3,
+.editor-styles-wrapper h4 {
+	font-family: 'Inter Tight', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+	font-weight: 600;
+	letter-spacing: -0.035em;
+	line-height: 1.02;
+}
+
+.editor-styles-wrapper h1 {
+	font-size: 46px;
+}
+
+.editor-styles-wrapper h2 {
+	font-size: 36px;
+}
+
+.editor-styles-wrapper h3 {
+	font-size: 25px;
+}
+
+.editor-styles-wrapper p {
+	font-size: 16px;
+	line-height: 1.65;
+}
+
+.editor-styles-wrapper a {
+	color: var(--af-accent);
+	text-decoration: underline;
+	text-underline-offset: 3px;
+}
+
+.editor-styles-wrapper blockquote {
+	border-left: 2px solid var(--af-accent);
+	margin: 26px 0;
+	padding: 4px 0 4px 22px;
+	font-family: 'Instrument Serif', Georgia, serif;
+	font-size: 24px;
+	font-style: italic;
+}
+
+.editor-styles-wrapper .af-eyebrow {
+	display: inline-block;
+	font-size: 10.5px;
+	font-weight: 500;
+	letter-spacing: 0.18em;
+	text-transform: uppercase;
+	color: var(--af-muted);
+}
+
+.editor-styles-wrapper .af-display {
+	font-size: 72px;
+	font-weight: 600;
+	line-height: 0.88;
+	letter-spacing: -0.05em;
+	text-transform: uppercase;
+}
+
+.editor-styles-wrapper .af-display em {
+	font-family: 'Instrument Serif', Georgia, serif;
+	font-style: italic;
+	font-weight: 400;
+	text-transform: none;
+	color: var(--af-accent);
+}
+
+.editor-styles-wrapper .af-lead {
+	font-size: 19px;
+	line-height: 1.5;
+	color: var(--af-muted);
+	max-width: 52ch;
+}
+
+.editor-styles-wrapper .af-block-hero {
+	padding: 46px 40px;
+	border: 1px dashed rgba(11, 11, 12, 0.18);
+	background: #faf8f3;
+}
+
+.editor-styles-wrapper .af-block-cta {
+	padding: 40px;
+	background: var(--af-ink);
+	color: var(--af-paper);
+}
+
+.editor-styles-wrapper .af-block-cta h2 {
+	color: var(--af-paper);
+}
+
+.editor-styles-wrapper .wp-block-button__link {
+	border-radius: 999px;
+	padding: 12px 22px;
+	font-size: 11px;
+	font-weight: 500;
+	letter-spacing: 0.1em;
+	text-transform: uppercase;
+	background: var(--af-ink);
+	color: var(--af-paper);
+	text-decoration: none;
+}
+
+.editor-styles-wrapper .wp-block-button.is-style-outline .wp-block-button__link {
+	background: transparent;
+	border: 1px solid var(--af-ink);
+	color: var(--af-ink);
+}
+
+.editor-styles-wrapper img {
+	max-width: 100%;
+	height: auto;
+}
