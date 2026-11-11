@@ -1140,6 +1140,19 @@ input, select, textarea {
 	background: radial-gradient(80% 70% at 50% 40%, rgba(3, 3, 5, 0.1) 0%, rgba(3, 3, 5, 0.78) 100%);
 }
 
+/* Il contenitore del bundle 3D resta sempre visibile: l'opacità appartiene
+   al solo livello .af-stage__scene creato da three.js, che compare quando
+   la scena è pronta. */
+.af-stage__host {
+	position: absolute;
+	inset: 0;
+}
+
+.af-stage__mount {
+	position: absolute;
+	inset: 0;
+}
+
 .af-stage__scene {
 	position: absolute;
 	inset: 0;
@@ -1165,6 +1178,143 @@ input, select, textarea {
 
 .af-stage__scene.is-dragging canvas {
 	cursor: grabbing;
+}
+
+/* Palco CSS: visibile finché WebGL non è pronto, oppure per sempre se il
+   dispositivo non supporta la scena 3D. */
+.af-stage__fallback {
+	position: absolute;
+	inset: 0;
+	overflow: hidden;
+	opacity: 1;
+	pointer-events: none;
+	transition: opacity 1s var(--af-ease);
+}
+
+.af-stage__host.is-3d-ready .af-stage__fallback {
+	opacity: 0;
+}
+
+.af-stage__rig {
+	position: absolute;
+	top: 11%;
+	left: -3%;
+	right: -3%;
+	height: clamp(38px, 5.4vw, 68px);
+	opacity: 0.5;
+	background:
+		repeating-linear-gradient(90deg, transparent 0 43px, rgba(255, 255, 255, 0.22) 43px 46px, transparent 46px 90px),
+		repeating-linear-gradient(62deg, transparent 0 17px, rgba(255, 255, 255, 0.14) 17px 19px, transparent 19px 38px),
+		repeating-linear-gradient(-62deg, transparent 0 17px, rgba(255, 255, 255, 0.1) 17px 19px, transparent 19px 38px);
+	border-top: 2px solid rgba(255, 255, 255, 0.24);
+	border-bottom: 2px solid rgba(255, 255, 255, 0.16);
+}
+
+.af-stage__beams {
+	position: absolute;
+	inset: 0;
+}
+
+.af-stage__beams i {
+	position: absolute;
+	top: 9%;
+	height: 74%;
+	width: 22%;
+	opacity: 0.55;
+	mix-blend-mode: screen;
+	filter: blur(11px);
+	transform-origin: 50% 0;
+	clip-path: polygon(47% 0, 53% 0, 100% 100%, 0 100%);
+	background: linear-gradient(180deg, rgba(255, 255, 255, 0.34), rgba(255, 255, 255, 0.07) 58%, transparent 86%);
+	animation: afBeamSway 11s ease-in-out infinite alternate;
+}
+
+.af-stage__beams i:nth-child(1) { left: 9%; transform: rotate(9deg); }
+.af-stage__beams i:nth-child(2) { left: 31%; transform: rotate(3deg); animation-delay: -3s; }
+.af-stage__beams i:nth-child(3) { left: 53%; transform: rotate(-3deg); animation-delay: -6s; }
+.af-stage__beams i:nth-child(4) { left: 72%; transform: rotate(-9deg); animation-delay: -8s; }
+
+@keyframes afBeamSway {
+	from { opacity: 0.4; }
+	to { opacity: 0.72; }
+}
+
+.af-stage__led {
+	position: absolute;
+	left: 50%;
+	top: 29.5%;
+	width: min(47vw, 660px);
+	aspect-ratio: 16 / 9;
+	transform: translateX(-50%);
+	overflow: hidden;
+	border: 6px solid #0d0d10;
+	background: #05060a;
+	box-shadow:
+		0 0 0 1px rgba(255, 255, 255, 0.16),
+		0 44px 100px rgba(0, 0, 0, 0.7),
+		0 0 110px rgba(130, 160, 255, 0.16);
+}
+
+.af-stage__led img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	object-position: center 22%;
+	filter: contrast(1.04) saturate(1.05) brightness(0.96);
+}
+
+.af-stage__led::after {
+	content: '';
+	position: absolute;
+	inset: 0;
+	background:
+		repeating-linear-gradient(180deg, rgba(0, 0, 0, 0.24) 0 1px, transparent 1px 3px),
+		linear-gradient(180deg, rgba(4, 6, 12, 0.06) 0%, rgba(4, 6, 12, 0) 42%, rgba(4, 6, 12, 0.46) 100%);
+}
+
+.af-stage__led-live,
+.af-stage__led-name {
+	position: absolute;
+	z-index: 2;
+	left: 3.4%;
+	right: 3.4%;
+	color: rgba(255, 255, 255, 0.9);
+	text-transform: uppercase;
+	letter-spacing: 0.16em;
+	line-height: 1.3;
+}
+
+.af-stage__led-live {
+	top: 4%;
+	font-size: clamp(7px, 0.72vw, 10px);
+	opacity: 0.72;
+}
+
+.af-stage__led-name {
+	bottom: 5%;
+	font-size: clamp(10px, 1.15vw, 16px);
+	font-weight: 600;
+	text-shadow: 0 2px 12px rgba(0, 0, 0, 0.6);
+}
+
+.af-stage__floor {
+	position: absolute;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	height: 36%;
+	background:
+		radial-gradient(62% 100% at 50% 100%, rgba(126, 154, 255, 0.18) 0%, rgba(126, 154, 255, 0) 72%),
+		linear-gradient(180deg, rgba(3, 3, 5, 0) 0%, rgba(3, 3, 5, 0.55) 100%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.af-stage__beams i { animation: none; }
+}
+
+@media (max-width: 760px) {
+	.af-stage__led { width: 78vw; top: 31%; }
+	.af-stage__beams i { width: 34%; }
 }
 
 .af-stage__vignette {
