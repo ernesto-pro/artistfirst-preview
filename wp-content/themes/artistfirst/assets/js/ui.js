@@ -1168,17 +1168,80 @@
 			'<span class="af-passdock__meta"><b data-af-pass-points>0</b><small data-af-pass-level>Scout</small></span>';
 		body.appendChild(passDock);
 
-		// Nei grandi hero (palco 3D, scheda artista) il dock si nasconde per
-		// non coprire contenuti e controlli, e riappare appena si scorre.
-		var hero = qs('.af-stage, .af-artist__hero');
-		if (hero && 'IntersectionObserver' in window) {
-			var heroObserver = new IntersectionObserver(function (entries) {
-				var entry = entries[0];
-				var tucked = entry.isIntersecting && entry.intersectionRatio > 0.45;
-				passDock.classList.toggle('is-tucked', tucked);
-			}, { threshold: [0, 0.45, 0.8] });
-			heroObserver.observe(hero);
+		// Nei grandi hero (palco 3D, scheda artista) e nel footer il dock si
+		// nasconde per non coprire contenuti, form e note legali.
+		var heroNear = false;
+		var footerNear = false;
+		function syncPassTuck() {
+			passDock.classList.toggle('is-tucked', heroNear || footerNear);
 		}
+		if ('IntersectionObserver' in window) {
+			var hero = qs('.af-stage, .af-artist__hero');
+			if (hero) {
+				new IntersectionObserver(function (entries) {
+					heroNear = entries[0].isIntersecting && entries[0].intersectionRatio > 0.45;
+					syncPassTuck();
+				}, { threshold: [0, 0.45, 0.8] }).observe(hero);
+			}
+			var passFooter = qs('.af-footer');
+			if (passFooter) {
+				new IntersectionObserver(function (entries) {
+					footerNear = entries[0].isIntersecting && entries[0].intersectionRatio > 0.12;
+					syncPassTuck();
+				}, { threshold: [0, 0.12, 0.4] }).observe(passFooter);
+			}
+		}
+
+		// Su desktop il dock resta come anello compatto durante la lettura.
+		var passMiniQuery = window.matchMedia('(min-width: 821px)');
+		function syncPassMini() {
+			passDock.classList.toggle('is-mini', passMiniQuery.matches && window.scrollY > 360);
+		}
+		window.addEventListener('scroll', syncPassMini, { passive: true });
+		if (passMiniQuery.addEventListener) {
+			passMiniQuery.addEventListener('change', syncPassMini);
+		}
+		syncPassMini();
+
+		// Se il dock copre un controllo (accordion, campo, pulsante), si ritrae
+		// per lasciarlo cliccabile. I link delle card non contano: l'immagine
+		// resta comunque leggibile e il dock non sparisce su tutta la griglia.
+		var passHitFrame = 0;
+		function passCheckHit() {
+			passHitFrame = 0;
+			var r = passDock.getBoundingClientRect();
+			if (r.width < 1 || passDock.classList.contains('is-tucked')) {
+				passDock.classList.remove('is-blocking');
+				return;
+			}
+			var points = [
+				[r.left + r.width / 2, r.top + r.height / 2],
+				[r.left + 10, r.top + 10],
+				[r.right - 10, r.top + 10],
+				[r.left + 10, r.bottom - 10],
+				[r.right - 10, r.bottom - 10]
+			];
+			var hit = false;
+			for (var i = 0; i < points.length && !hit; i++) {
+				var stack = document.elementsFromPoint(points[i][0], points[i][1]);
+				for (var j = 0; j < stack.length; j++) {
+					var node = stack[j];
+					if (passDock.contains(node)) continue;
+					if (node.closest('button, summary, input, select, textarea, [role="button"]')) {
+						hit = true;
+						break;
+					}
+				}
+			}
+			passDock.classList.toggle('is-blocking', hit);
+		}
+		function passScheduleHit() {
+			if (passHitFrame) return;
+			passHitFrame = window.requestAnimationFrame(passCheckHit);
+		}
+		window.addEventListener('scroll', passScheduleHit, { passive: true });
+		window.addEventListener('resize', passScheduleHit);
+		passScheduleHit();
 
 		passDrawer = doc.createElement('div');
 		passDrawer.className = 'af-pass';

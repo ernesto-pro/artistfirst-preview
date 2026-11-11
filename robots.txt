@@ -2,4 +2,4 @@ User-agent: *
 Disallow: /wp-admin/
 Allow: /wp-admin/admin-ajax.php
 
-Sitemap: https://ernesto-pro.github.io/artistfirst-preview/sitemap.xml
+Sitemap: https://ernesto-pro.github.io/artistfirst-preview/wp-sitemap.xml

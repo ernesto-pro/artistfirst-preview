@@ -52,6 +52,8 @@
 	--af-container: 1600px;
 	--af-gutter: clamp(18px, 3.2vw, 54px);
 	--af-header: 80px;
+	--af-section-y: clamp(56px, 10vw, 120px);
+	--af-anchor: calc(var(--af-header) + 18px);
 }
 
 /* Superfici scure: l'accento si inverte per restare leggibile. */
@@ -190,6 +192,8 @@ input, select, textarea {
 	left: 10px;
 	z-index: 999;
 	transform: translateY(-200%);
+	opacity: 0;
+	pointer-events: none;
 	background: var(--af-ink);
 	color: var(--af-paper);
 	padding: 10px 16px;
@@ -198,8 +202,11 @@ input, select, textarea {
 	letter-spacing: 0.1em;
 }
 
-.af-skip:focus {
+.af-skip:focus,
+.af-skip:focus-visible {
 	transform: translateY(0);
+	opacity: 1;
+	pointer-events: auto;
 }
 
 /* -------------------------------------------------------------------------
@@ -815,6 +822,10 @@ input, select, textarea {
 }
 
 .af-lang a {
+	display: inline-flex;
+	align-items: center;
+	min-height: 30px;
+	padding: 0 3px;
 	transition: color 0.2s;
 }
 
@@ -2299,7 +2310,17 @@ input, select, textarea {
    ------------------------------------------------------------------------- */
 
 .af-section {
-	padding: clamp(72px, 8.5vw, 140px) 0;
+	padding: var(--af-section-y) 0;
+}
+
+/* Ancore e skip link non finiscono sotto header/ticket bar. */
+#af-main,
+.af-section,
+.af-manifesto,
+.af-igsec,
+.af-sendmusic,
+.af-shopbanner {
+	scroll-margin-top: var(--af-anchor);
 }
 
 .af-section__head {
@@ -4002,7 +4023,7 @@ a.af-concert__btn:hover {
 .af-sendmusic {
 	background: var(--af-ink);
 	color: var(--af-paper);
-	padding: clamp(70px, 9vw, 130px) 0;
+	padding: var(--af-section-y) 0;
 }
 
 .af-sendmusic__inner {
@@ -7772,10 +7793,6 @@ input[type="file"]::file-selector-button:hover {
 			linear-gradient(180deg, rgba(3, 3, 5, 0.72) 0%, rgba(3, 3, 5, 0) 18%, rgba(3, 3, 5, 0.24) 34%, rgba(3, 3, 5, 0.82) 58%, rgba(3, 3, 5, 0.96) 76%, rgba(3, 3, 5, 0.99) 100%);
 	}
 
-	.af-section {
-		padding: clamp(56px, 10vw, 90px) 0;
-	}
-
 	.af-section__head {
 		align-items: flex-start;
 		flex-direction: column;
@@ -8458,7 +8475,7 @@ input[type="file"]::file-selector-button:hover {
 	overflow: hidden;
 	background: var(--af-ink);
 	color: var(--af-paper);
-	padding: clamp(64px, 8vw, 132px) 0 clamp(36px, 4.5vw, 64px);
+	padding: var(--af-section-y) 0;
 }
 
 .af-manifesto::before {
@@ -9269,7 +9286,8 @@ body.af-palette-open {
 	box-shadow: 0 20px 46px rgba(11, 11, 12, 0.34);
 }
 
-.af-passdock.is-tucked {
+.af-passdock.is-tucked,
+.af-passdock.is-blocking {
 	opacity: 0;
 	transform: translateY(130%);
 	pointer-events: none;
@@ -9328,6 +9346,26 @@ body.af-cookie-open .af-passdock {
 @media (min-width: 821px) {
 	.post-type-archive-concerto .af-passdock {
 		display: none;
+	}
+
+	/* Dopo i primi scroll il dock si compatta nel solo anello AF:
+	   meno ingombro sui titoli delle card; si riapre su hover/focus. */
+	.af-passdock.is-mini {
+		padding: 6px;
+	}
+
+	.af-passdock.is-mini .af-passdock__meta {
+		display: none;
+	}
+
+	.af-passdock.is-mini:hover,
+	.af-passdock.is-mini:focus-visible {
+		padding: 7px 17px 7px 7px;
+	}
+
+	.af-passdock.is-mini:hover .af-passdock__meta,
+	.af-passdock.is-mini:focus-visible .af-passdock__meta {
+		display: flex;
 	}
 }
 
@@ -10814,6 +10852,13 @@ body.af-leaving {
 
 	.af-passdock__meta {
 		display: none;
+	}
+
+	.af-artist-card__next {
+		left: 8px;
+		max-width: calc(100% - 16px);
+		padding: 4px 6px;
+		letter-spacing: 0.04em;
 	}
 
 	.af-artists__top {
@@ -14079,6 +14124,11 @@ button:focus:not(:focus-visible) {
 	.af-artist__stats dt {
 		font-size: 8.5px;
 	}
+
+	.af-eyebrow {
+		font-size: 10px;
+		letter-spacing: 0.13em;
+	}
 }
 
 .af-artist__next-status {
@@ -14398,7 +14448,7 @@ button:focus:not(:focus-visible) {
 	overflow: hidden;
 	background: var(--af-ink);
 	color: var(--af-paper);
-	padding-block: clamp(58px, 8vw, 112px);
+	padding-block: var(--af-section-y);
 }
 
 .af-igsec::before {
@@ -15245,6 +15295,11 @@ body.af-igmodal-open {
 }
 
 @media (max-width: 560px) {
+	.af-igfeed .af-ig-cta .af-ig-cta__handle {
+		font-size: 13px;
+		letter-spacing: -0.03em;
+	}
+
 	.af-igmodal {
 		padding: 0;
 		align-items: stretch;
@@ -15263,10 +15318,6 @@ body.af-igmodal-open {
 
 	.af-igmodal__link {
 		display: none;
-	}
-
-	.af-igsec {
-		padding-block: 46px;
 	}
 
 	.af-igsec__title {
