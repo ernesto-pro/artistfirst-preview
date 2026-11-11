@@ -12652,7 +12652,8 @@ body.af-boxoffice-open {
 	align-items: center;
 	justify-content: center;
 	gap: 26px;
-	background: #050507;
+	background: radial-gradient(95% 85% at 50% 42%, rgba(5, 5, 7, 0.34) 0%, rgba(5, 5, 7, 0.72) 62%, rgba(5, 5, 7, 0.9) 100%);
+	backdrop-filter: blur(3px) saturate(1.1);
 	color: var(--af-paper);
 	transition: opacity 0.85s var(--af-ease), visibility 0.85s;
 }
@@ -12720,7 +12721,7 @@ body.af-boxoffice-open {
 	background: var(--af-paper);
 	transform: scaleX(0);
 	transform-origin: left;
-	animation: af-boot-load 1.65s cubic-bezier(0.5, 0.02, 0.2, 1) forwards;
+	animation: af-boot-load 1.05s cubic-bezier(0.5, 0.02, 0.2, 1) forwards;
 }
 
 .af-boot__meta {
