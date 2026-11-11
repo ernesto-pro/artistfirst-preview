@@ -49,22 +49,33 @@
 		}
 	}
 
-	var onScroll = function () {
+	var applyScroll = function () {
 		if (header) header.classList.toggle('is-scrolled', window.scrollY > 8);
-		if (!tixbar) return;
-		var threshold = Math.min(window.innerHeight * 0.72, 620);
-		var show = window.scrollY > threshold && !body.classList.contains('af-menu-open');
-		if (show === tixbar.classList.contains('is-visible')) return;
-		tixbar.classList.toggle('is-visible', show);
-		tixbar.setAttribute('aria-hidden', show ? 'false' : 'true');
-		tixbar.inert = !show;
-		// Una sola barra alla volta: quando entra la barra biglietti l'header
-		// scivola via, liberando spazio per i contenuti.
-		if (header) header.classList.toggle('is-hidden', show);
+		if (tixbar) {
+			var threshold = Math.min(window.innerHeight * 0.72, 620);
+			var show = window.scrollY > threshold && !body.classList.contains('af-menu-open');
+			if (show !== tixbar.classList.contains('is-visible')) {
+				tixbar.classList.toggle('is-visible', show);
+				tixbar.setAttribute('aria-hidden', show ? 'false' : 'true');
+				tixbar.inert = !show;
+				// Una sola barra alla volta: quando entra la barra biglietti l'header
+				// scivola via, liberando spazio per i contenuti.
+				if (header) header.classList.toggle('is-hidden', show);
+			}
+		}
+	};
+	var scrollFrame = false;
+	var onScroll = function () {
+		if (scrollFrame) return;
+		scrollFrame = true;
+		window.requestAnimationFrame(function () {
+			scrollFrame = false;
+			applyScroll();
+		});
 	};
 	window.addEventListener('scroll', onScroll, { passive: true });
-	window.addEventListener('resize', onScroll);
-	onScroll();
+	window.addEventListener('resize', applyScroll);
+	applyScroll();
 
 	/* Menu mobile -------------------------------------------------------- */
 	var mobileMenu = qs('#af-mobile-menu');
@@ -401,8 +412,8 @@
 			ring.style.transform = 'translate3d(' + smooth.x + 'px,' + smooth.y + 'px,0) translate(-50%, -50%) scale(' + (cursorActive ? 1.85 : 1) + ')';
 			spotting.x += (pointer.x - spotting.x) * 0.08;
 			spotting.y += (pointer.y - spotting.y) * 0.08;
-			spotlight.style.setProperty('--af-x', spotting.x + 'px');
-			spotlight.style.setProperty('--af-y', spotting.y + 'px');
+			// Solo transform: niente gradient ridisegnato a ogni frame.
+			spotlight.style.transform = 'translate3d(' + spotting.x + 'px,' + spotting.y + 'px,0)';
 			ring.classList.toggle('is-active', cursorActive);
 
 			if (Math.abs(pointer.x - smooth.x) > 0.4 || Math.abs(pointer.y - smooth.y) > 0.4 || Math.abs(pointer.x - spotting.x) > 0.6 || Math.abs(pointer.y - spotting.y) > 0.6) {
@@ -2577,6 +2588,14 @@
 
 		apply();
 	}
+
+	/* I blocchi React montano in idle: riallinea motion e reveal. */
+	document.addEventListener('af:mount', function () {
+		bindMotion();
+		initReveals();
+		paintParallax();
+		passSyncButtons();
+	});
 
 	/* Boot dei moduli ---------------------------------------------------- */
 	if (doc.readyState === 'loading') {
