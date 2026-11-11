@@ -2064,6 +2064,12 @@
 					img.classList.add('is-fallback');
 				}
 			};
+			// Le immagini differite non hanno ancora src: il fallback scatta
+			// solo se il caricamento reale fallisce (evento error).
+			if (!img.getAttribute('src')) {
+				img.addEventListener('error', swap);
+				return;
+			}
 			if (img.complete && !img.naturalWidth) swap();
 			img.addEventListener('error', swap);
 		});
@@ -2589,12 +2595,45 @@
 		apply();
 	}
 
+	/* Immagini sotto la piega -------------------------------------------- */
+	/* Le card del feed Instagram non hanno `src` nel markup: senza src il
+	   browser non può scaricarle durante il primo layout (dove, prima del
+	   CSS, risultano vicine alla viewport). Il src arriva solo quando la
+	   card è a 600 px dallo schermo. */
+	var lazyImgObserver = null;
+	var loadLazyImages = function () {
+		qsa('img[data-af-src]').forEach(function (img) {
+			if (img.getAttribute('data-af-lazy') === '1') return;
+			img.setAttribute('data-af-lazy', '1');
+			var swap = function () {
+				var src = img.getAttribute('data-af-src');
+				if (src && !img.getAttribute('src')) img.setAttribute('src', src);
+			};
+			if (!('IntersectionObserver' in window)) {
+				swap();
+				return;
+			}
+			if (!lazyImgObserver) {
+				lazyImgObserver = new IntersectionObserver(function (entries) {
+					entries.forEach(function (entry) {
+						if (!entry.isIntersecting) return;
+						lazyImgObserver.unobserve(entry.target);
+						var src = entry.target.getAttribute('data-af-src');
+						if (src && !entry.target.getAttribute('src')) entry.target.setAttribute('src', src);
+					});
+				}, { rootMargin: '600px 0px' });
+			}
+			lazyImgObserver.observe(img);
+		});
+	};
+
 	/* I blocchi React montano in idle: riallinea motion e reveal. */
 	document.addEventListener('af:mount', function () {
 		bindMotion();
 		initReveals();
 		paintParallax();
 		passSyncButtons();
+		loadLazyImages();
 	});
 
 	/* Boot dei moduli ---------------------------------------------------- */
@@ -2611,6 +2650,7 @@
 			pageTransitions();
 			initArtistDossier();
 			initInstagram();
+			loadLazyImages();
 			initCalendar();
 			initRoster();
 		});
@@ -2626,6 +2666,7 @@
 		pageTransitions();
 		initArtistDossier();
 		initInstagram();
+		loadLazyImages();
 		initCalendar();
 		initRoster();
 	}
